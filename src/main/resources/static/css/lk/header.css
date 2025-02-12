@@ -1,0 +1,238 @@
+/* 🌙 Тёмная тема */
+:root {
+    --bg-color: #121212;
+    --header-color: #1A1A1A;
+    --hover-color: #3A3A3A;
+    --text-color: #EAEAEA;
+}
+
+/* 🏠 Шапка */
+.header {
+    width: 100%;
+    background-color: var(--header-color);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px var(--hover-color);
+    position: relative;
+}
+
+
+/* 🚀 Логотип */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-color);
+}
+
+.logo-container i {
+    font-size: 28px;
+    color: var(--accent-color);
+}
+
+.logo-container h1 {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 22px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.menu-btn:hover {
+    color: var(--accent-color);
+}
+
+/* 📋 Быстрое меню */
+.quick-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 30px;
+    background-color: var(--header-color);
+    box-shadow: 0 2px 15px var(--hover-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.quick-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.quick-menu a:hover {
+    background-color: var(--hover-color);
+    color: var(--accent-color);
+}
+
+.quick-menu.show {
+    display: block;
+}
+
+/* 🔎 Центрированный поиск */
+.search-container {
+    position: absolute;
+    left: 30%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+}
+
+
+.search-container input {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: none;
+    width: 250px;
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    transition: box-shadow 0.3s ease;
+}
+
+.search-container input:focus {
+    outline: none;
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+.search-container button {
+    background: none;
+    border: none;
+    margin-left: -35px;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* 👤 Аккаунт */
+.account-container {
+    display: flex;
+    align-items: center;
+}
+
+.account-btn {
+    background-color: var(--hover-color);
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 22px;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.account-btn:hover {
+    background-color: var(--accent-color);
+}
+
+/* 📋 Контейнер подсказок */
+.suggestions-box {
+    display: none;
+    position: absolute;
+    top: 45px;
+    width: 250px;
+    background-color: var(--header-color);
+    box-shadow: 0 4px 15px var(--hover-color);
+    border-radius: 8px;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* 📄 Стиль для каждой подсказки */
+.suggestion-item {
+    padding: 10px 15px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.suggestion-item:hover {
+    background-color: var(--hover-color);
+    color: var(--accent-color);
+}
+
+/* 🚀 Градиент только для текста логотипа */
+.logo-container h1 {
+    font-size: 24px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #00ff7f, #28a745, #006400); /* 🌿 Зеленый градиент */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: green-gradient-move 5s infinite linear;
+    background-size: 200% auto; /* 🔄 Плавность */
+}
+
+/* 🔄 Плавный зелёный градиент */
+@keyframes green-gradient-move {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 🔍 Поиск */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-container input {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    width: 300px;
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    transition: box-shadow 0.3s ease, width 0.3s ease;
+}
+
+.search-container input:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(40, 167, 69, 0.8);
+    width: 350px;
+}
+
+/* 📋 Контейнер подсказок */
+.suggestions-box {
+    display: none;
+    position: absolute;
+    top: 45px;
+    width: 100%;
+    background-color: var(--card-color);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    z-index: 10;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: none;  /* 🔥 Убираем скролл */
+}
+
+/* 🎬 Элементы подсказок */
+.suggestion-item {
+    padding: 12px 20px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-bottom: 1px solid var(--hover-color);
+}
+
+.suggestion-item:hover {
+    background-color: #28a745;
+    color: #fff;
+    transform: scale(1.02);
+}
+
+/* 📝 Дополнительная информация (ИНН, директор) */
+.suggestion-details {
+    font-size: 12px;
+    color: var(--hover-color);
+    margin-top: 5px;
+}

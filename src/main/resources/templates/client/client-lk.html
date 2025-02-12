@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${client?.getFederalTaxService()?.nameOrganization} ?: 'Карточка клиента'"></title>
+    <link rel="stylesheet" th:href="@{/css/lk/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/lk/head.css}">
+    <link rel="stylesheet" th:href="@{/css/lk/header.css}">
+    <link rel="stylesheet" th:href="@{/css/lk/buttons.css}">
+    <link rel="stylesheet" th:href="@{/css/lk/partner.css}">
+    <link rel="stylesheet" th:href="@{/css/lk/password.css}">
+    <link rel="stylesheet" th:href="@{/css/lk/hide_section.css}">
+    <link rel="stylesheet" th:href="@{/css/lk/modal.css}">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+
+<!-- 🌟 Шапка -->
+<header class="header">
+    <div class="logo-container">
+        <i>🐙🤔</i>
+        <h1>vesyoliy prikol</h1>
+        <!-- 📋 Быстрое меню -->
+        <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+        <div id="quick-menu" class="quick-menu">
+            <a href="#">📊 Дашборд</a>
+            <a href="#">📂 Документы</a>
+            <a href="#">💬 Чат поддержки</a>
+            <a href="#">⚙️ Настройки</a>
+        </div>
+    </div>
+
+    <!-- 🔎 Поиск с подсказками -->
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Поиск клиента..." onkeyup="showSuggestions(this.value)">
+        <button><i class="fas fa-search"></i></button>
+
+        <!-- 📋 Контекстное меню с подсказками -->
+        <div id="suggestions-box" class="suggestions-box"></div>
+    </div>
+
+
+    <!-- 👤 Профиль -->
+    <div class="account-container">
+        <button class="account-btn"><i class="fas fa-user-circle"></i></button>
+    </div>
+</header>
+
+<div th:if="${client == null}">
+
+</div>
+
+<div class="container" th:if="${client!= null}">
+    <!-- 📋 Карточка клиента -->
+    <div class="client-header no-border">
+        <div class="client-title">
+            <i class="fas fa-check-circle active-icon"></i> <!-- ✅ Активный клиент -->
+            <div>
+                <h1 th:text="${client?.getFederalTaxService()?.nameOrganization} ?: ''"></h1>
+                <p th:if="${client?.getFederalTaxService()?.getType().equalsIgnoreCase('LEGAL')}">
+                    Юридическое лицо
+                </p>
+            </div>
+        </div>
+
+        <!-- 🏷️ Теги обслуживания с иконками -->
+        <div class="service-tags">
+            <span class="tag tech-support"><i class="fas fa-tools"></i> Техническое сопровождение</span>
+            <span class="tag accounting"><i class="fas fa-calculator"></i> Бухгалтерия</span>
+            <span class="tag consulting"><i class="fas fa-comments"></i> Консалтинг</span>
+        </div>
+
+        <!-- ⚠️ Плашка для архивных клиентов -->
+        <div class="archive-banner" th:if="${client.isArchiveBlock()}">
+            <i class="fas fa-archive"></i> Клиент отправлен в архив по причине: <strong th:text="${client?.getReasonArchiveBlock() ?: 'Причина не указана'}"></strong>
+        </div>
+    </div>
+
+    <!-- 📦 Бургер-меню -->
+    <div class="burger-menu">
+        <i class="fas fa-ellipsis-v" onclick="toggleDropdown()"></i>
+
+        <!-- 📋 Выпадающее меню -->
+        <div id="dropdown-menu" class="dropdown-menu">
+
+            <!-- 📑 Табы -->
+            <div class="dropdown-header">📑 Разделы</div>
+
+            <button class="btn-partner" onclick="togglePartnerSection()">
+                <i class="fas fa-briefcase"></i> Партнёрский раздел
+            </button>
+            <button class="btn-password" onclick="togglePasswordSection()">
+                <i class="fas fa-key"></i> Пароли приложений
+            </button>
+            <button class="btn-password" onclick="toggleModal()">
+                <i class="fas fa-university"></i> Расширенная информация
+            </button>
+
+            <!-- 📂 Основные действия -->
+            <div class="dropdown-header">📂 Действия</div>
+            <button><i class="fas fa-sync-alt"></i> Обновить данные</button>
+            <button><i class="fas fa-tasks"></i> Создать задачу</button>
+            <button><i class="fas fa-bell"></i> Уведомления <span class="badge">3</span></button>
+
+
+            <!-- ⚙️ Настройки -->
+            <div class="dropdown-header">⚙️ Настройки</div>
+            <button><i class="fas fa-user-edit"></i> Редактировать профиль</button>
+
+            <!-- ❗ Опасная зона -->
+            <div class="dropdown-header danger-header">❗ Опасные действия</div>
+            <button class="danger-btn"><i class="fas fa-trash-alt"></i> Удалить клиента</button>
+        </div>
+    </div>
+
+    <div class="main-layout" id="main">
+
+        <div class="left-column">
+            <!-- 📇 Левый блок "Руководители" -->
+            <aside class="left-block">
+                <h2><i class="fas fa-user-tie"></i> Руководитель</h2>
+                <div class="info-section">
+                    <label>ФИО:</label>
+                    <div class="info-field" th:text="${client?.getLeadersClient()?.getFullname()}"></div>
+                    <label>Должность:</label>
+                    <div class="info-field" th:text="${client?.getLeadersClient()?.getPost()}"></div>
+                    <label>Телефон:</label>
+                    <div class="info-field" th:text="${client?.getLeadersClient()?.getNumber()}"></div>
+                    <label>Email:</label>
+                    <div class="info-field" th:text="${client?.getLeadersClient()?.getEmail()}"></div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-egrip"><i class="fas fa-file-signature"></i> Карточка организации</button>
+                </div>
+            </aside>
+
+            <!-- 🔍 Новый левый блок -->
+            <aside class="left-block">
+                <h2><i class="fas fa-info-circle"></i> Информация о клиенте</h2>
+                <div class="info-section">
+                    <label>Создал:</label>
+                    <div class="info-field" th:text="${client?.getUserBy()}"></div>
+                    <label>Дата создания:</label>
+                    <div class="info-field" th:text="${client.getDateOfCreated()}"></div>
+                    <label>Заметки</label>
+                    <textarea class="info-textarea" placeholder="Введите заметки..."></textarea>
+                </div>
+            </aside>
+        </div>
+
+        <!-- 📄 Правый блок "Информация о клиенте" -->
+        <section class="right-block">
+            <!-- 📋 Реквизиты -->
+            <div class="info-card">
+                <h3><i class="fas fa-file-alt"></i> Реквизиты</h3>
+                <div class="info-section two-columns-grid">
+                    <div>
+                        <label>ИНН:</label>
+                        <div class="info-field" th:text="${client?.getFederalTaxService()?.getInn()}">
+                            <!-- Ссылка на сверку -->
+                            <a href="#" class="verify-link">Сверить клиента по ИНН</a>
+                        </div>
+                    </div>
+
+
+                    <div th:if="${client.getFederalTaxService()?.getType() == 'LEGAL'}">
+                        <label>КПП:</label>
+                        <div class="info-field" th:text="${client.getFederalTaxService()?.getKpp}"></div>
+                    </div>
+
+                    <div>
+                        <label>ОГРН:</label>
+                        <div class="info-field" th:text="${client.getFederalTaxService()?.getOgrn}"></div>
+                    </div>
+
+                    <div>
+                        <label>ОКВЭД (расшифровка):</label>
+                        <div class="info-field" th:text="${client?.getOkveds()?.get(0).getName().getFirst().getName()}"></div>
+                    </div>
+
+                    <div>
+                        <label>Почта (организации):</label>
+                        <div class="info-field">kirillkalmykov88@gmail.com</div>
+                    </div>
+
+                    <div>
+                        <label>Телефон (организации):</label>
+                        <div class="info-field">+7 990 000 62 94</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 📋 Реквизиты --><!-- 📋 Реквизиты -->
+            <div class="info-card">
+                <h3><i class="fas fa-map"></i> Адрес предприятия</h3>
+                <div class="info-section">
+                    <label>Фактический адрес:</label>
+                    <div class="info-field">Запорожская обл, г. Мелитополь, Гагарина 9</div>
+
+                    <label>Юридический адрес:</label>
+                    <div class="info-field">Запорожская обл, г. Мелитополь, Гагарина 9</div>
+
+                    <label>Индекс:</label>
+                    <div class="info-field">272300</div>
+                </div>
+
+                <!-- 🔘 Кнопка ФИАС -->
+                <div class="btn-fias">
+                    <div class="btn-group">
+                        <button onclick="handleFiasClick()">
+                            <i class="fas fa-map-marker-alt"></i> Меню ФИАС
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 📊 Сведения Росстат и ПФР -->
+            <div class="two-columns" style="display: none">
+            </div>
+            <div class="info-card" style="display: none">
+                <h3><i class="fas fa-file-alt"></i> Данные контролирующих органов</h3>
+
+                <!-- 🔘 Кнопка для раскрытия -->
+                <button class="toggle-details-btn" onclick="toggleDetails(this)">
+                    <i class="fas fa-chevron-down"></i> Показать подробности
+                </button>
+
+                <!-- 🔽 Скрытая секция с данными в 3 колонки -->
+                <div class="info-section three-columns-grid hidden">
+                    <div>
+                        <label>Код налоговой:</label>
+                        <div class="info-field">9001</div>
+                    </div>
+
+                    <div>
+                        <label>Налоговая:</label>
+                        <div class="info-field">Межрайонная инспекция ФНС России № 1 по Запорожской области</div>
+                    </div>
+
+                    <div>
+                        <label>Адрес налоговой:</label>
+                        <div class="info-field">Запорожская область, м.р-н Мелитопольский, г.п. Мелитопольское, г. Мелитополь, ул. Беляева, д. 57А</div>
+                    </div>
+
+
+                    <div>
+                        <label>ОКПО:</label>
+                        <div class="info-field">9000100556</div>
+                    </div>
+
+                    <div>
+                        <label>ОКАТО:</label>
+                        <div class="info-field">900100554</div>
+                    </div>
+
+                    <div>
+                        <label>ОКТМО:</label>
+                        <div class="info-field">25645455887744156</div>
+                    </div>
+
+                    <div>
+                        <label>ОКФС:</label>
+                        <div class="info-field">14 ноября 2013 г.</div>
+                    </div>
+
+                    <div>
+                        <label>ОКВЭД (основной):</label>
+                        <div class="info-field">42.11</div>
+                    </div>
+
+                    <div>
+                        <label>ОКВЭД (расшифровка):</label>
+                        <div class="info-field">Разработка программного обеспечения</div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+
+    </div>
+
+
+    <div class="partner-container" id="partner" style="display: none;">
+
+        <!-- ⚙️ Панель управления (Теперь с разделами) -->
+        <aside class="control-panel">
+            <h3><i class="fas fa-sliders-h"></i> Панель управления</h3>
+
+            <!-- 🔄 Раздел: Синхронизация -->
+            <div class="control-section">
+                <h4><i class="fas fa-sync"></i> Синхронизация</h4>
+                <button><i class="fas fa-sync-alt"></i> Полная синхронизация</button>
+                <button><i class="fas fa-network-wired"></i> 1С ИТС</button>
+                <button><i class="fas fa-link"></i> 1С КП</button>
+                <button><i class="fas fa-cogs"></i> Программы</button>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <!-- 📂 Раздел: Данные -->
+            <div class="control-section">
+                <h4><i class="fas fa-database"></i> Данные</h4>
+                <button class="add-manual-btn"><i class="fas fa-plus-circle"></i> Добавить вручную</button>
+                <button><i class="fas fa-server"></i> Данные портала</button>
+                <button><i class="fas fa-file-alt"></i> Данные договоров</button>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <!-- 🔐 Раздел: Лицензии -->
+            <div class="control-section">
+                <h4><i class="fas fa-key"></i> Лицензии</h4>
+                <button><i class="fas fa-file-contract"></i> Файлы лицензий</button>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <!-- ❗ Опасная зона -->
+            <div class="control-section danger-section">
+                <h4><i class="fas fa-exclamation-triangle"></i> Опасная зона</h4>
+                <button class="danger-btn"><i class="fas fa-trash-alt"></i> Очистка данных</button>
+            </div>
+        </aside>
+
+
+        <div class="content-area">
+            <!-- 📦 Блок программ -->
+            <section class="programs-section">
+                <h2><i class="fas fa-cubes"></i> Программные продукты</h2>
+                <div class="programs-list">
+                    <div class="program-card prof"> <!-- Добавь класс "prof" или "base" -->
+                        <!-- 🔖 Метка версии слева сверху -->
+                        <span class="version-badge">ПРОФ</span> <!-- Или "БАЗОВАЯ" -->
+
+                        <!-- 📌 Заголовок и регистрационный номер -->
+                        <div class="program-header">
+                            <h3>1С: ЗУП</h3> <!-- Абревиатура -->
+                            <span class="reg-badge">85564556</span> <!-- Рег. номер -->
+                        </div>
+
+                        <!-- 📄 Полное название программы -->
+                        <p class="program-desc">1С: Зарплата и Управление Персоналом</p>
+                    </div>
+                    <!-- Пример карточки Облачной версии -->
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+                    <div class="program-card cloud">
+                        <span class="version-badge">Облако</span>
+                        <div class="program-header">
+                            <h3>1С: Облачная Бухгалтерия</h3>
+                            <span class="reg-badge">#98765432</span>
+                        </div>
+                        <p class="program-desc">Удалённый доступ к бухгалтерии</p>
+                    </div>
+
+                </div>
+                <div id="programs-pagination" class="pagination"></div>
+            </section>
+
+            <br>
+
+            <!-- 📃 Договоры -->
+            <section class="contracts-section">
+                <h2><i class="fas fa-file-contract"></i> Договоры</h2>
+                <div class="contracts-grid">
+                    <!-- ✅ Активный договор -->
+                    <div class="contract-card active">
+                        <div class="contract-header">
+                            <h3>Договор ИТС №67890</h3>
+                            <span class="status-badge active">Активен</span>
+                        </div>
+                        <p>Дата начала: 01.06.2023</p>
+                        <p>Дата окончания: 01.06.2024</p>
+
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 60%;"></div>
+                        </div>
+
+                        <p class="days-left">Осталось 180 дней</p>
+                    </div>
+                </div>
+
+            </section>
+            <div id="contracts-pagination" class="pagination"></div>
+        </div>
+
+    </div>
+
+    <div id="password-section" style="display: none;">
+        <div class="password-container">
+
+            <!-- ⚙️ Панель управления -->
+            <aside class="control-panel">
+                <h3><i class="fas fa-key"></i> Менеджер паролей</h3>
+
+                <!-- 🔍 Поиск -->
+                <div class="password-search-container">
+                    <input type="text" id="password-search" placeholder="Поиск по сайтам..." onkeyup="filterPasswords()">
+                </div>
+
+                <!-- ➕ Добавить пароль -->
+                <button class="btn-add-password" onclick="addPassword()">
+                    <i class="fas fa-plus-circle"></i> Добавить пароль
+                </button>
+            </aside>
+
+            <!-- 📋 Карточки паролей -->
+            <section class="passwords-list" id="passwords-list">
+                <!-- 💾 Карточки (пример) -->
+                <div class="password-card">
+                    <div class="password-header">
+                        <h4>gmail.com</h4>
+                        <span class="password-label personal">Личное</span>
+                    </div>
+                    <p><strong>Логин:</strong> <span class="copyable" onclick="copyToClipboard(this)" data-copy="user@gmail.com">user@gmail.com</span></p>
+                    <p><strong>Пароль:</strong> <span class="copyable password-hidden" onclick="copyToClipboard(this)" data-copy="mySecret123">********</span></p>
+                    <button onclick="togglePassword(this)">👁️ Показать</button>
+                    <p class="added-by">Добавил: <strong>Админ</strong> • 14.01.2025</p>
+                </div>
+                <!-- 🔁 Повтори еще карточки -->
+            </section>
+
+            <!-- 🔄 Пагинация -->
+            <div id="passwords-pagination" class="pagination"></div>
+        </div>
+    </div>
+</div>
+
+<footer class="app-footer">
+    <div class="footer-container">
+        <!-- 🔗 Ссылки -->
+        <div class="footer-links">
+            <h4><i class="fas fa-link"></i> Навигация</h4>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="#partner-section">Партнёрский раздел</a></li>
+                <li><a href="#password-section">Менеджер паролей</a></li>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#support">Поддержка</a></li>
+            </ul>
+        </div>
+
+        <!-- 🛠️ Информация о приложении -->
+        <div class="footer-info">
+            <h4><i class="fas fa-info-circle"></i> О приложении</h4>
+            <p><strong>Название:</strong> Веселый прикол</p>
+            <p><strong>Версия:</strong> 3.0.0</p>
+            <p><strong>Разработчик:</strong> matthewencore</p>
+            <p><strong>tg:</strong> @matthewencore</p>
+        </div>
+    </div>
+
+    <!-- 📄 Копирайт -->
+    <div class="footer-bottom">
+        <p>&copy; 2025 Веселый прикол</p>
+    </div>
+</footer>
+
+
+<!--Модальные окна-->
+
+<!-- Модальное окно -->
+<div id="custom-modal" class="modal-overlay">
+    <div class="modal-content">
+        <!-- Заголовок -->
+        <div class="modal-header">
+            <h3><i class="fas fa-info-circle"></i> Реквизиты</h3>
+            <button class="close-modal" onclick="toggleModal()">×</button>
+        </div>
+        <!-- Тело -->
+        <div class="modal-body">
+            <div class="two-columns-grid">
+                <div>
+                    <label>ИНН:</label>
+                    <span class="copyable" onclick="copyToClipboard(this)" data-copy="9000100556">9000100556</span>
+                </div>
+                <div>
+                    <label>КПП:</label>
+                    <span class="copyable" onclick="copyToClipboard(this)" data-copy="900100554">900100554</span>
+                </div>
+                <div>
+                    <label>ОГРН:</label>
+                    <span class="copyable" onclick="copyToClipboard(this)" data-copy="25645455887744156">25645455887744156</span>
+                </div>
+                <div>
+                    <label>Дата регистрации:</label>
+                    <span class="copyable" onclick="copyToClipboard(this)" data-copy="14 ноября 2013 г.">14 ноября 2013 г.</span>
+                </div>
+                <div>
+                    <label>ОКВЭД (основной):</label>
+                    <span class="copyable" onclick="copyToClipboard(this)" data-copy="42.11">42.11</span>
+                </div>
+                <div>
+                    <label>ОКВЭД (расшифровка):</label>
+                    <span class="copyable" onclick="copyToClipboard(this)" data-copy="Разработка программного обеспечения">
+                        Разработка программного обеспечения
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("quick-menu").classList.toggle("show");
+        }
+
+        // 📂 Открытие и закрытие меню
+        document.addEventListener('DOMContentLoaded', function () {
+            const burger = document.querySelector('.burger-menu');
+            const dropdown = document.querySelector('.dropdown-menu');
+
+            burger.addEventListener('click', function () {
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // ❌ Закрыть меню при клике вне области
+            document.addEventListener('click', function (e) {
+                if (!burger.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+
+    </script>
+    <script th:src="@{/js/lk/search.js}"></script>
+    <script th:src="@{/js/lk/script.js}"></script>
+    <script th:src="@{/js/lk/hide-lk.js}"></script>
+    <script th:src="@{/js/lk/pagination.js}"></script>
+    <script th:src="@{/js/lk/password.js}"></script>
+    <script th:src="@{/js/lk/hide-section.js}"></script>
+    <script th:src="@{/js/lk/checkClient.js}"></script>
+    <script th:src="@{/js/lk/modal.js}"></script>
+    <script th:src="@{/js/lk/copy-info-field.js}"></script>
+
+
+</body>
+</html>

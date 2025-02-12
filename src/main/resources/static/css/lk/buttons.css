@@ -1,0 +1,121 @@
+/* 📋 Заголовок с бургер-меню */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--hover-color);
+}
+
+/* 📦 Бургер-меню с градиентом */
+.burger-menu {
+    position: relative;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--text-color);
+    z-index: 10;
+    float: right;
+}
+
+/* 🟢 Иконка бургера с градиентом */
+.burger-menu i {
+    padding: 8px;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #28a745, #006400); /* Градиент от светло-зелёного к тёмно-зелёному */
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.burger-menu i:hover {
+    background: linear-gradient(45deg, #00ff7f, #28a745); /* Яркий зелёный градиент при наведении */
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.6);
+}
+
+/* 📋 Выпадающее меню с градиентом */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: linear-gradient(180deg, #1F1F1F, #2A2A2A); /* Плавный тёмный градиент */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 15;
+    width: 220px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ✨ Анимация появления */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🔖 Заголовок меню с градиентом */
+.dropdown-header {
+    padding: 12px 15px;
+    background: linear-gradient(90deg, #28a745, #006400); /* Зелёный градиент */
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+/* 🚀 Кнопки меню с градиентом */
+.dropdown-menu button {
+    width: 100%;
+    background-color: transparent;
+    color: var(--text-color);
+    padding: 12px 15px;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-menu button:hover {
+    background: linear-gradient(90deg, #28a745, #006400); /* Градиент при наведении */
+    color: #fff;
+    transform: translateX(5px);
+}
+
+/* 🚧 Разделитель */
+.menu-divider {
+    height: 1px;
+    background-color: #444;
+    margin: 8px 0;
+}
+
+/* 🟥 Опасная кнопка с градиентом */
+.danger-btn {
+    color: #ff4d4d;
+}
+
+.danger-btn:hover {
+    background: linear-gradient(90deg, #ff4d4d, #b30000); /* Градиент красного */
+    color: #fff;
+}
+
+/* 🔔 Значок уведомлений */
+.badge {
+    background: linear-gradient(45deg, #ff4d4d, #ff0000); /* Градиент уведомлений */
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-left: auto;
+}
+

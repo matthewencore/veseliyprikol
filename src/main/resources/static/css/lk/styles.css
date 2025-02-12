@@ -1,0 +1,548 @@
+/* 🌙 Тёмная тема */
+:root {
+    --bg-color: #121212;             /* Основной фон */
+    --card-color: #1F1F1F;           /* Цвет карточек */
+    --primary-color: #3a3a3a;        /* Тёмный акцент */
+    --accent-color: #505050;         /* Мягкий тёмно-серый */
+    --hover-color: #2a2a2a;          /* Цвет при наведении */
+    --text-color: #EAEAEA;           /* Основной текст */
+    --shadow-color: rgba(0, 0, 0, 0.6); /* Тень */
+    --hover-text-color: #D1D1D1;     /* Текст при наведении */
+    --green-color:  #28a745;
+}
+
+/* 📄 Базовые стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.5;
+    font-size: 0.9rem; /* 📉 Уменьшено на 10% */
+}
+
+/* 📦 Контейнер */
+.container {
+    width: 90%;
+    max-width: 1080px; /* 📉 Уменьшено на 10% */
+    margin: 20px auto;
+}
+
+/* 📐 Основная сетка */
+.main-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* 📇 Левый блок */
+.left-block {
+    width: 35%;
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+/* 📄 Правый блок */
+.right-block {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 📊 Карточки */
+.info-card {
+    background-color: var(--card-color);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+
+/* 📊 Сетка */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.info-grid div {
+    background-color: var(--hover-color);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.info-grid div:hover {
+    background-color: var(--accent-color);
+    color: var(--hover-text-color);
+    transform: translateY(-3px);
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* 📊 Сетка для двух колонок */
+.two-columns {
+    display: flex;
+    gap: 20px;
+}
+
+.two-columns .info-card {
+    width: 50%;
+}
+
+/* 🔘 Кнопки */
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-report, .btn-egrip, .btn-follow {
+    background-color: var(--hover-color);
+    color: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-report:hover, .btn-egrip:hover, .btn-follow:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* 📋 Заголовки */
+h2, h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+h3 i {
+    margin-right: 8px;
+}
+
+/* 🔎 Выделение текста */
+strong {
+    color: var(--accent-color);
+}
+
+/* 📱 Адаптивность */
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+    }
+
+    .left-block, .right-block {
+        width: 100%;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .two-columns {
+        flex-direction: column;
+    }
+
+    .two-columns .info-card {
+        width: 100%;
+    }
+}
+
+/* 🌟 Эффект наведения для кнопок */
+.btn-group button {
+    background-color: var(--hover-color);
+    color: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-group button:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* 📝 Подсветка текста */
+.info-grid div:hover strong {
+    color: var(--hover-text-color);
+}
+
+/* 🌙 Тёмная тема */
+:root {
+    --bg-color: #121212;
+    --card-color: #1F1F1F;
+    --primary-color: #3a3a3a;
+    --accent-color: #505050;
+    --hover-color: #2a2a2a;
+    --text-color: #EAEAEA;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --hover-text-color: #D1D1D1;
+}
+
+/* 📄 Базовые стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.5;
+}
+
+/* 📦 Контейнер */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+/* 📇 Левый блок */
+.left-block {
+    width: 35%;
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+/* 📄 Правый блок */
+.right-block {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 📊 Информация */
+.info-field {
+    background-color: var(--green-color);
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.info-field:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* 📋 Заголовки */
+label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* 🔘 Кнопки */
+.btn-group button {
+    background-color: var(--hover-color);
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-group button:hover {
+    background-color: var(--accent-color);
+}
+
+/* 📊 Сетка для двух колонок */
+.two-columns-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Две колонки */
+    gap: 20px;
+}
+
+/* 📋 Заголовки полей */
+.two-columns-grid label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* 📦 Поля с данными */
+.info-field {
+    background-color: var(--hover-color); /* Тёмный фон */
+    padding: 10px 15px;
+    border-radius: 6px;
+    border-left: 4px solid #28a745; /* Тонкий зелёный слева */
+    color: var(--text-color);
+    box-shadow: none;
+    transition: all 0.3s ease;
+}
+
+/* 🌟 Подсветка при наведении */
+.info-field:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+
+/* 🌟 Плавное исчезновение */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+/* 🌟 Плавное появление */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s forwards;
+}
+
+
+/* 🌙 Подвал */
+.app-footer {
+    background-color: #1F1F1F; /* Цвет фона */
+    color: var(--text-color);
+    padding: 40px 20px;
+    width: 100%;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.6);
+    margin-top: 40px;
+}
+
+/* 📦 Основной контейнер */
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Две колонки */
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+/* 🔗 Ссылки и разделы */
+.footer-links,
+.footer-info {
+    flex: 1;
+}
+
+.footer-links h4,
+.footer-info h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 8px;
+}
+
+.footer-links ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+    color: #28a745;
+}
+
+/* 📄 Информация */
+.footer-info p {
+    margin: 5px 0;
+    color: #aaa;
+}
+
+/* 📄 Копирайт */
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #2a2a2a;
+    color: #aaa;
+    font-size: 12px;
+}
+
+/* 📋 Блоки внутри подвала */
+.footer-container > div {
+    background-color: #2a2a2a;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* 📱 Адаптивность */
+@media (max-width: 768px) {
+    .footer-container {
+        grid-template-columns: 1fr; /* Одна колонка */
+    }
+}
+
+/* 🟢 Контейнер левой колонки */
+.left-column {
+    display: flex; /* Flex для горизонтального расположения */
+    flex-wrap: wrap; /* Перенос на новую строку, если не помещается */
+    gap: 20px; /* Расстояние между блоками */
+}
+
+/* 🟢 Левый блок */
+.left-block {
+    flex: 1 1 calc(50% - 20px); /* Занимает половину ширины контейнера (минус gap) */
+    background-color: var(--card-color);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    min-width: 250px; /* Минимальная ширина блока */
+}
+
+/* 🟢 Заголовки блоков */
+.left-block h2 {
+    font-size: 18px;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 🔘 Кнопки внутри блока */
+.btn-group button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-group button:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+/* 🟢 Поля информации */
+.info-field {
+    background-color: var(--hover-color);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+label {
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* 🔲 Текстовое поле */
+.info-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    resize: vertical; /* Разрешаем изменение высоты */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* 🖱️ Стили при фокусе */
+.info-textarea:focus {
+    outline: none;
+    background-color: var(--card-color); /* Немного светлее при вводе */
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.5); /* Зеленоватая подсветка */
+}
+
+/* 🔲 Плейсхолдер */
+.info-textarea::placeholder {
+    color: #aaa; /* Светлый текст для подсказки */
+    font-style: italic;
+}
+
+/* 🔘 Кнопка ФИАС */
+.btn-fias {
+    margin-top: 15px;
+    text-align: center; /* Центрируем кнопку */
+}
+
+.btn-fias button {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Расстояние между иконкой и текстом */
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* 🖱️ Эффект при наведении */
+.btn-fias button:hover {
+    background-color: #28a745; /* Зелёный оттенок при наведении */
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.5);
+}
+
+/* 🌟 Ссылка для сверки */
+.verify-link {
+    display: inline-block;
+    margin-left: 10px; /* Отступ от ИНН */
+    padding: 5px 10px;
+    color: #28a745; /* Зеленый цвет для акцента */
+    font-size: 12px;
+    text-decoration: none;
+    border: 1px solid #28a745; /* Граница в тон текста */
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.verify-link:hover {
+    background-color: #28a745; /* Зеленый фон при наведении */
+    color: #fff; /* Белый текст */
+    text-decoration: none;
+}

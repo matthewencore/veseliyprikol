@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка 404 — Клиент не найден</title>
+    <link rel="stylesheet" th:href="@{/css/lk/exception/404.css}">
+    <script defer th:src="@{/js/lk/exception/404.js}"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- 🌌 Контейнер 404 -->
+<div class="error-container">
+    <h1>404</h1>
+    <p>Сервер вернул ошибку "ClientDoesNotExist"</p>
+    <p class="error-details">Не верный параметр для клиента</p>
+
+    <!-- 🍞 Хлебные крошки -->
+    <nav class="breadcrumbs">
+        <a href="/" class="breadcrumb"><i class="fas fa-home"></i> Главная</a>
+        <span> / </span>
+        <span class="current-page">Ошибка 404</span>
+    </nav>
+
+    <!-- 🔄 Кнопка возврата -->
+    <button onclick="goBack()" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Вернуться назад
+    </button>
+</div>
+
+</body>
+</html>

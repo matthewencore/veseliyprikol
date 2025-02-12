@@ -1,0 +1,135 @@
+/* 🌙 Тёмная тема */
+:root {
+    --bg-color: #121212;
+    --card-color: #1F1F1F;
+    --primary-color: #3a3a3a;
+    --accent-color: #505050;
+    --hover-color: #2a2a2a;
+    --text-color: #EAEAEA;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --tag-color: #444;
+    --tag-text-color: #FFF;
+    --archive-bg-color: #FF4D4D;
+}
+
+/* 📋 Лёгкий блок без фона */
+.client-header.no-border {
+    padding: 25px 20px;
+    margin-bottom: 25px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+/* 🏢 Название компании */
+.client-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.client-title h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px; /* Уменьшенный размер */
+    color: var(--text-color);
+    margin: 0;
+    word-break: break-word; /* Перенос длинных слов */
+    max-width: 600px; /* Ограничиваем ширину */
+}
+
+.client-title p {
+    font-size: 13px;
+    color: var(--accent-color);
+    margin-top: 5px;
+    max-width: 600px;
+}
+
+/* ✅ Иконка активности */
+.active-icon {
+    font-size: 24px;
+    color: #28a745;
+}
+
+/* 🏷️ Теги обслуживания */
+.service-tags {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 600px;
+}
+
+/* 🏷️ Стили тегов */
+.tag {
+    background-color: var(--tag-color);
+    color: var(--tag-text-color);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.tag i {
+    font-size: 12px;
+}
+
+/* 🌟 Подсветка тегов */
+.tag:hover {
+    background-color: #28a745;
+    transform: translateY(-2px);
+}
+
+/* ⚠️ Плашка "Архив" */
+.archive-banner {
+    display: none;
+    background-color: var(--archive-bg-color);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(255, 77, 77, 0.5);
+    font-size: 13px;
+    max-width: 1200px;
+    word-break: break-word;
+}
+
+/* 📦 Иконка архива */
+.archive-banner i {
+    font-size: 16px;
+}
+
+/* 📱 Адаптивность */
+@media (max-width: 768px) {
+    .client-title h1 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    .client-header.no-border {
+        padding: 20px 15px;
+    }
+
+    .service-tags {
+        justify-content: center;
+    }
+
+    .tag {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    .archive-banner {
+        font-size: 12px;
+    }
+}
