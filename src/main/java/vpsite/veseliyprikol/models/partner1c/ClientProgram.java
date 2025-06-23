@@ -18,7 +18,7 @@ public class ClientProgram {
     private Program program;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @JoinColumn(name = "sub_id")
+    private Subscriber subscriber;
 
 }

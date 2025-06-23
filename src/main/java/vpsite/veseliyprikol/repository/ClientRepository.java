@@ -12,4 +12,6 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     List<Client> findByFederalTaxService_InnOrFederalTaxService_Ogrn(String federalTaxService_inn, String ogrn);
     Optional<Client> findBySlug(String slug);
     Optional<Client> findByFederalTaxService_Inn(String inn);
+    Optional<Client> findById(Long inn);
+
 }

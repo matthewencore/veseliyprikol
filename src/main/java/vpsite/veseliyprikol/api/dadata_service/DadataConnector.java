@@ -3,6 +3,7 @@ package vpsite.veseliyprikol.api.dadata_service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vpsite.veseliyprikol.api.dadata_service.exceptions.*;
@@ -23,13 +24,11 @@ import vpsite.veseliyprikol.services.DaData;
 @Data
 @Slf4j
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class DadataConnector {
-    @Autowired
-    DaDataRepository dadata;
-    @Autowired
-    DaData service;
+
+    private final DaDataRepository dadata;
+    private final DaData service;
 
     // Проверка таблицы
     DadataModels checkToken(){
@@ -83,11 +82,8 @@ public class DadataConnector {
                             "\nReason: %s",response.statusCode(),response.body()));
         }
 
-
-
         log.info("Десереализация прошла успешно");
         return response;
-
     }
 
     // Подтянуть информацию по ФНС

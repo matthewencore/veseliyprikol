@@ -1,10 +1,9 @@
 package vpsite.veseliyprikol.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,27 +13,32 @@ import vpsite.veseliyprikol.api.dadata_service.json.FederalTaxServiceResponse;
 import vpsite.veseliyprikol.api.dadata_service.json.JSON_Response;
 import vpsite.veseliyprikol.api.dadata_service.json.SuggestionResponse;
 import vpsite.veseliyprikol.models.client.*;
+import vpsite.veseliyprikol.models.client.dto.ClientDto;
+import vpsite.veseliyprikol.models.client.mapper.ClientMapper;
+import vpsite.veseliyprikol.models.partner1c.Subscriber;
 import vpsite.veseliyprikol.repository.ClientRepository;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
-public class Client {
-    @Autowired
-    ClientRepository client_rep;
-    @Autowired
-    DadataConnector dadataConnector;
-    @Autowired
-    Okved okved;
+@RequiredArgsConstructor
+public class ClientService {
+    private final ClientRepository client_rep;
+    private final DadataConnector dadataConnector;
+    private final Okved okved;
 
-    public ResponseEntity<JSON_Response> create_with_api(SuggestionResponse response) throws URISyntaxException, IOException, InterruptedException {
+    // мапперы
+    private final ClientMapper clientMapper;
+
+
+    public ResponseEntity<JSON_Response> create_with_api(SuggestionResponse response)
+            throws URISyntaxException, IOException, InterruptedException {
         if (response.getSuggestions() == null || response.getSuggestions().isEmpty()){
             log.error("Клиент не был найден по текущему запросу, проверьте пожалуйста входные данные.");
             return ResponseEntity
@@ -43,8 +47,8 @@ public class Client {
                     .toString(),"По такому запросу клиент не был найден, проверьте входные данные."));
         }
 
-        // Инстанцированные объект
-        vpsite.veseliyprikol.models.client.Client client = new vpsite.veseliyprikol.models.client.Client();
+        // Инстанцированные объект's
+        Client client = new Client();
 
         FederalTaxService fns_info = new FederalTaxService();
         PlaceClient place = new PlaceClient();
@@ -64,18 +68,18 @@ public class Client {
                         .body(new JSON_Response(HttpStatus.BAD_REQUEST
                         .toString(),String.format("[%s] уже есть в базе",cl.getValue())));
             }
+            
+            fns_info.setInn(validateString(cl.getData().getInn(), "ИНН"));
+            fns_info.setOgrn(validateString(cl.getData().getOgrn(), "ОГРН"));
+            fns_info.setNameOrganization(validateString(cl.getValue(), "Наименование организации"));
+            fns_info.setOkato(validateString(cl.getData().getOkato(), "ОКАТО"));
+            fns_info.setOkfs(validateString(cl.getData().getOkfs(), "ОКФС"));
+            fns_info.setOktmo(validateString(cl.getData().getOktmo(), "ОКТМО"));
+            fns_info.setOkved(validateString(cl.getData().getOkved(), "ОКВЕД"));
 
-            // Блок информации по федеральной налоговой службе
-            fns_info.setInn(validateString(cl.getData().getInn(),"ИНН"));
-            fns_info.setOgrn(validateString(cl.getData().getOgrn(),"ОГРН"));
-            fns_info.setNameOrganization(validateString(cl.getValue(),"Наименование организации"));
-            fns_info.setOkato(validateString(cl.getData().getOkato(),"ОКАТО"));
-            fns_info.setOkfs(validateString(cl.getData().getOkfs(),"ОКФС"));
-            fns_info.setOktmo(validateString(cl.getData().getOktmo(),"ОКТМО"));
-            fns_info.setOkved(validateString(cl.getData().getOkved(),"ОКВЕД"));
+            fns_info.setType(validateString(cl.getData().getType(), "Правовая форма"));
+            fns_info.setTax_office(validateString(cl.getData().getAddress().getData().getTax_office(), "ФНС"));
 
-            fns_info.setType(validateString(cl.getData().getType(),"Правовая форма"));
-            fns_info.setTax_office(validateString(cl.getData().getAddress().getData().getTax_office(),"ФНС"));
 
             if (cl.getData().getType().equalsIgnoreCase("INDIVIDUAL")) {
                 leader.setName(validateString(cl.getData().getFio().getName(), "Имя лидера"));
@@ -166,8 +170,6 @@ public class Client {
                 .toString(),String.format("[%s] был успешно создан.",client.getFederalTaxService().getNameOrganization())));
     }
 
-
-
     public boolean check_unique(String inn, String ogrn){
         List<vpsite.veseliyprikol.models.client.Client> client = client_rep.findByFederalTaxService_InnOrFederalTaxService_Ogrn(inn, ogrn);
         if (client.isEmpty()) {
@@ -178,15 +180,26 @@ public class Client {
         return false;
     }
 
+    public void linkedWith1CPortalLk(Subscriber subscriber, Client client){
+    }
+
     // Найти по слагу человека
-    public vpsite.veseliyprikol.models.client.Client get_client_by_slug(String slug){
+    public Client get_client_by_slug(String slug){
         return client_rep.findBySlug(slug)
                 .orElseThrow(() -> new ClientDoesNotExist("По такому слагу клиента не нашлось."));
 
     }
 
+    public Client getByIdClient(Long id){
+        return client_rep.findById(id).orElse(null);
+    }
+
+    public Client findByInn(String inn){
+        return client_rep.findByFederalTaxService_Inn(inn).orElseGet(vpsite.veseliyprikol.models.client.Client::new);
+    }
+
     public String validateString(String element, String field){
-        if (element != null && StringUtils.hasText(element)){
+        if (StringUtils.hasText(element)){
             return element;
 
         } else {
@@ -194,6 +207,17 @@ public class Client {
                     "По умолчанию поставлено строка без символов.",field);
             return "";
         }
+    }
+
+    // Получить всех клиентов
+    @EntityGraph(attributePaths = {
+            "okveds",
+            "leadersClient",
+            "placeClient",
+            "federalTaxService" }
+    )
+    public List<ClientDto> getAllClient(){
+        return clientMapper.toDtoList(client_rep.findAll());
     }
 
 

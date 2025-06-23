@@ -1,5 +1,6 @@
 package vpsite.veseliyprikol.services;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,9 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class Portal1C {
-    @Autowired
-    Settings1CPortalRepository settings1CPortalRepository;
+    private final Settings1CPortalRepository settings1CPortalRepository;
 
     public SettingsPartner findOrCreateSettings(){
         return settings1CPortalRepository.findById(1L).orElseGet(() -> {

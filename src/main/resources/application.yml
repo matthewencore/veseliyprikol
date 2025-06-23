@@ -8,13 +8,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-  thymeleaf:
-    mode: HTML
-    prefix: classpath:/templates/
-    suffix: .html
-    cache: false
-    encoding: UTF-8
-    enabled: true
   main:
     allow-bean-definition-overriding: true
   application:

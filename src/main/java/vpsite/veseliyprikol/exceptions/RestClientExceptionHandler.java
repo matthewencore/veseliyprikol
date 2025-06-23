@@ -1,5 +1,6 @@
 package vpsite.veseliyprikol.exceptions;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,10 @@ import vpsite.veseliyprikol.services.DaData;
 
 @RestControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class RestClientExceptionHandler {
 
-    @Autowired
-    DaData service;
+    private final DaData service;
 
     @ExceptionHandler(DaDataBadRequest.class)
     public ResponseEntity<JSON_Response> handleBadRequest(){
@@ -45,7 +46,8 @@ public class RestClientExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new JSON_Response(HttpStatus.BAD_REQUEST
-                        .toString(),"Настройки для дадаты пусты, попробуйте еще раз, заполните их и попробуйте еще раз."));
+                        .toString(),"Настройки для дадаты пусты, " +
+                        "попробуйте еще раз, заполните их и попробуйте еще раз."));
     }
 
     @ExceptionHandler(DaDataTokenEmpty.class)
@@ -55,7 +57,8 @@ public class RestClientExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new JSON_Response(HttpStatus.BAD_REQUEST
-                        .toString(),"Настройки для дадаты пусты, попробуйте еще раз, заполните их и попробуйте еще раз."));
+                        .toString(),"Настройки для дадаты пусты, " +
+                        "попробуйте еще раз, заполните их и попробуйте еще раз."));
     }
 
 }

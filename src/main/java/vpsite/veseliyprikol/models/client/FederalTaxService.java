@@ -45,7 +45,7 @@ public class FederalTaxService {
 
 
     // Является ли юридическим лицом
-    private boolean isUL;
+    private boolean ul;
     private LocalDate dateRegOrg;
 
     // Связь побочная

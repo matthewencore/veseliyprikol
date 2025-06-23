@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface SubscribersRepository  extends JpaRepository<Subscriber, Long> {
     Optional<Subscriber> findByCode(String code);
+    Optional<Subscriber> findByClient_Id(Long id);
+
 }

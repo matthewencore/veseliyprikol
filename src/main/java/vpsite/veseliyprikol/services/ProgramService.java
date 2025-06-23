@@ -1,5 +1,6 @@
 package vpsite.veseliyprikol.services;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,9 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ProgramService {
-    @Autowired
-    ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     // Cоздание объекта программы
     public void createProgram(List<ProgramAccessDto> program){
